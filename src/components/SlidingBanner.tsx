@@ -14,12 +14,22 @@ const SlidingBanner = () => {
   ];
 
   useEffect(() => {
+    const imageWidth = 350; // Width of each image
+    const gap = 32; // 2rem gap in pixels
+    const singleSetWidth = images.length * (imageWidth + gap);
+
     const interval = setInterval(() => {
-      setPosition(prev => prev - 1);
+      setPosition(prev => {
+        // If we've scrolled the width of one set, reset to start
+        if (Math.abs(prev) >= singleSetWidth) {
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 20);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   const bannerStyles = {
     display: 'flex',
@@ -27,7 +37,6 @@ const SlidingBanner = () => {
     width: 'max-content',
     gap: '2rem',
     transform: `translateX(${position}px)`,
-    transition: 'transform 0s linear'
   };
 
   const containerStyles = {
@@ -51,24 +60,23 @@ const SlidingBanner = () => {
     boxShadow: '0 4px 30px rgba(0,0,0,0.4)'
   };
 
+  // Calculate how many sets of images we need to ensure smooth scrolling
+  const sets = 3; // Using 3 sets to ensure smooth transition
+
   return (
     <div style={containerStyles}>
       <div style={bannerStyles}>
-        {images.map((image) => (
-          <img
-            key={image.id}
-            src={image.url}
-            alt={image.alt}
-            style={imageStyles}
-          />
-        ))}
-        {images.map((image) => (
-          <img
-            key={`dup-${image.id}`}
-            src={image.url}
-            alt={image.alt}
-            style={imageStyles}
-          />
+        {[...Array(sets)].map((_, setIndex) => (
+          <React.Fragment key={`set-${setIndex}`}>
+            {images.map((image) => (
+              <img
+                key={`${setIndex}-${image.id}`}
+                src={image.url}
+                alt={image.alt}
+                style={imageStyles}
+              />
+            ))}
+          </React.Fragment>
         ))}
       </div>
     </div>

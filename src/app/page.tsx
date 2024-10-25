@@ -45,9 +45,9 @@ const Home = () => {
       </div>
 
       {/* Content Container */}
-      <div className="flex-1 flex flex-col justify-between px-4 pt-24 pb-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8 gap-8">
         {/* Hero Section */}
-        <div className="text-center">
+        <div className="text-center mb-4">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
             Welcome to the Future
           </h1>
@@ -56,13 +56,13 @@ const Home = () => {
           </p>
         </div>
 
-        {/* Banner */}
-        <div className="py-12">
+        {/* Banner Section */}
+        <div className="w-full">
           <SlidingBanner />
         </div>
 
-        {/* Info Section */}
-        <div className="max-w-5xl mx-auto w-full">
+        {/* Collection Info Section - Moved closer to banner */}
+        <div className="max-w-5xl mx-auto w-full -mt-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 place-items-center">
             <div className="flex gap-12 items-center justify-center w-full">
               <div className="text-center">
@@ -73,7 +73,7 @@ const Home = () => {
               </div>
               <div className="text-center">
                 <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-                  0.05 ETH
+                  3 APE
                 </p>
                 <p className="text-gray-400 text-sm mt-1">Mint Price</p>
               </div>
