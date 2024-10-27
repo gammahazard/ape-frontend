@@ -19,11 +19,9 @@ const SlotMachine = () => {
   const [showWinForm, setShowWinForm] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
   
-  // Use refs for audio elements
   const reelSoundRef = useRef<HTMLAudioElement | null>(null);
   const winSoundRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio elements on client side only
   useEffect(() => {
     if (typeof window !== 'undefined') {
       reelSoundRef.current = new Audio('/reel.mp3');
@@ -199,14 +197,14 @@ const SlotMachine = () => {
           transform transition-all duration-200 
           ${spinning ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:from-purple-600 hover:to-pink-600'}`}
       >
-        {spinning ? 'Spinning...' : 'SPIN!'}
+        {spinning ? "Spinning..." : "SPIN!"}
       </button>
 
       {showWinForm && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl p-8 max-w-md w-full border border-purple-500/30">
             <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent text-center">
-              🎉 Congratulations! You've Won! 🎉
+              🎉 Congratulations! You&apos;ve Won! 🎉
             </h2>
             <form onSubmit={handleWinSubmit} className="space-y-6">
               <div>
