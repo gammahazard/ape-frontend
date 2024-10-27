@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Twitter } from 'lucide-react';
 import SlidingBanner from '@/components/SlidingBanner';
+import SlotMachine from '@/components/SlotMachine';
+
 
 const DiscordIcon = () => (
   <svg 
@@ -60,7 +62,7 @@ const Home = () => {
         <div className="w-full">
           <SlidingBanner />
         </div>
-
+<SlotMachine />
         {/* Collection Info Section - Moved closer to banner */}
         <div className="max-w-5xl mx-auto w-full -mt-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 place-items-center">
