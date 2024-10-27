@@ -1,25 +1,52 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+type Symbol = '🍒' | '💎' | '7' | '🍀' | '⭐' | '🎰';
+
+interface SymbolConfig {
+  weight: number;
+  value: number;
+}
+
+type SymbolConfigMap = {
+  [key in Symbol]: SymbolConfig;
+};
 
 const SlotMachine = () => {
   const [spinning, setSpinning] = useState(false);
-  const [slots, setSlots] = useState(['7', '7', '7']);
+  const [slots, setSlots] = useState<Symbol[]>(['7', '7', '7']);
   const [lever, setLever] = useState(false);
   const [isWin, setIsWin] = useState(false);
   const [showWinForm, setShowWinForm] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
   
-  const reelSound = new Audio('/reel.mp3');
-  const winSound = new Audio('/win.mp3');
-  
+  // Use refs for audio elements
+  const reelSoundRef = useRef<HTMLAudioElement | null>(null);
+  const winSoundRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize audio elements on client side only
   useEffect(() => {
-    reelSound.loop = true;
+    if (typeof window !== 'undefined') {
+      reelSoundRef.current = new Audio('/reel.mp3');
+      winSoundRef.current = new Audio('/win.mp3');
+      
+      if (reelSoundRef.current) {
+        reelSoundRef.current.loop = true;
+      }
+    }
+
     return () => {
-      reelSound.pause();
-      reelSound.currentTime = 0;
+      if (reelSoundRef.current) {
+        reelSoundRef.current.pause();
+        reelSoundRef.current = null;
+      }
+      if (winSoundRef.current) {
+        winSoundRef.current.pause();
+        winSoundRef.current = null;
+      }
     };
   }, []);
 
-  const symbolConfig = {
+  const symbolConfig: SymbolConfigMap = {
     '🍒': { weight: 35, value: 10 },
     '💎': { weight: 20, value: 50 },
     '7': { weight: 10, value: 100 },
@@ -28,26 +55,38 @@ const SlotMachine = () => {
     '🎰': { weight: 15, value: 75 }
   };
   
-  const symbols = Object.keys(symbolConfig);
+  const symbols: Symbol[] = Object.keys(symbolConfig) as Symbol[];
 
-  const playSound = useCallback((soundType) => {
+  const playSound = useCallback((soundType: 'spin' | 'win' | 'stop') => {
+    if (typeof window === 'undefined') return;
+
     if (soundType === 'spin') {
-      winSound.pause();
-      winSound.currentTime = 0;
-      reelSound.currentTime = 0;
-      reelSound.play().catch(e => console.log('Audio playback failed:', e));
+      if (winSoundRef.current) {
+        winSoundRef.current.pause();
+        winSoundRef.current.currentTime = 0;
+      }
+      if (reelSoundRef.current) {
+        reelSoundRef.current.currentTime = 0;
+        reelSoundRef.current.play().catch(e => console.log('Audio playback failed:', e));
+      }
     } else if (soundType === 'win') {
-      reelSound.pause();
-      reelSound.currentTime = 0;
-      winSound.currentTime = 0;
-      winSound.play().catch(e => console.log('Audio playback failed:', e));
+      if (reelSoundRef.current) {
+        reelSoundRef.current.pause();
+        reelSoundRef.current.currentTime = 0;
+      }
+      if (winSoundRef.current) {
+        winSoundRef.current.currentTime = 0;
+        winSoundRef.current.play().catch(e => console.log('Audio playback failed:', e));
+      }
     } else if (soundType === 'stop') {
-      reelSound.pause();
-      reelSound.currentTime = 0;
+      if (reelSoundRef.current) {
+        reelSoundRef.current.pause();
+        reelSoundRef.current.currentTime = 0;
+      }
     }
   }, []);
 
-  const checkWin = (finalSlots) => {
+  const checkWin = (finalSlots: Symbol[]): number => {
     if (finalSlots[0] === finalSlots[1] && finalSlots[1] === finalSlots[2]) {
       return symbolConfig[finalSlots[0]].value * 3;
     }
@@ -57,7 +96,7 @@ const SlotMachine = () => {
     return 0;
   };
 
-  const getWeightedSymbol = () => {
+  const getWeightedSymbol = (): Symbol => {
     const weights = Object.values(symbolConfig).map(config => config.weight);
     const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
     let random = Math.random() * totalWeight;
@@ -90,7 +129,7 @@ const SlotMachine = () => {
       
       if (spins >= maxSpins) {
         clearInterval(spinInterval);
-        const finalSlots = [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()];
+        const finalSlots: Symbol[] = [getWeightedSymbol(), getWeightedSymbol(), getWeightedSymbol()];
         setSlots(finalSlots);
         const winAmount = checkWin(finalSlots);
         
@@ -106,7 +145,7 @@ const SlotMachine = () => {
     }, 100);
   };
 
-  const handleWinSubmit = (e) => {
+  const handleWinSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Winner wallet address:', walletAddress);
     setShowWinForm(false);
@@ -115,12 +154,10 @@ const SlotMachine = () => {
 
   return (
     <div className="flex flex-col items-center gap-8 p-8 w-full max-w-4xl mx-auto">
-      {/* Title */}
       <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
         Try Your Luck
       </h2>
       
-      {/* Main Machine */}
       <div className={`relative bg-gradient-to-b from-gray-900 to-black rounded-2xl p-12 shadow-2xl 
         border border-white/10 backdrop-blur-sm w-full
         ${isWin ? 'animate-pulse' : ''}`}>
@@ -143,7 +180,6 @@ const SlotMachine = () => {
           ))}
         </div>
         
-        {/* Lever */}
         <div 
           className={`absolute -right-12 top-1/2 w-6 h-32 bg-gradient-to-b from-purple-500 to-pink-500 
             rounded-full cursor-pointer transform origin-top transition-all duration-500 
@@ -155,7 +191,6 @@ const SlotMachine = () => {
         </div>
       </div>
       
-      {/* Spin Button */}
       <button
         onClick={spin}
         disabled={spinning}
@@ -167,7 +202,6 @@ const SlotMachine = () => {
         {spinning ? 'Spinning...' : 'SPIN!'}
       </button>
 
-      {/* Win Modal */}
       {showWinForm && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl p-8 max-w-md w-full border border-purple-500/30">
