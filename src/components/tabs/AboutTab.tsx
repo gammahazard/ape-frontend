@@ -14,7 +14,7 @@ const AboutTab = () => {
             through our comprehensive roadmap and exciting future developments.
           </p>
           <p>
-            Join us on this exciting journey as we push the boundaries of what's possible in the NFT space.
+            Join us on this exciting journey as we push the boundaries of what&apos;s possible in the NFT space.
           </p>
         </div>
       </div>
