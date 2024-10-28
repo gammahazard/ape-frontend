@@ -238,7 +238,7 @@ const SlotMachine = () => {
     setTimeout(() => setLever(false), 500);
 
     // Reset reels
-    reelRefs.current.forEach((reel, index) => {  // <-- 'index' is not used
+    reelRefs.current.forEach((reel, _index) => {
         if (reel) {
           reel.style.transition = 'none';
           reel.style.transform = 'translateY(0)';
