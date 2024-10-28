@@ -238,13 +238,12 @@ const SlotMachine = () => {
     setTimeout(() => setLever(false), 500);
 
     // Reset reels
-    reelRefs.current.forEach((reel, index) => {
-      if (reel) {
-        reel.style.transition = 'none';
-        reel.style.transform = 'translateY(0)';
-      }
-    });
-
+    reelRefs.current.forEach((reel, index) => {  // <-- 'index' is not used
+        if (reel) {
+          reel.style.transition = 'none';
+          reel.style.transform = 'translateY(0)';
+        }
+      });
     // Force reflow
     reelRefs.current.forEach(reel => {
       if (reel) void reel.offsetHeight;
