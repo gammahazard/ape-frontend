@@ -8,7 +8,7 @@ const geist = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Lucid Apes NFT Collection",
+  title: "Jungle Vision NFT Collection",
   description: "Join our exclusive NFT collection in the metaverse",
 };
 

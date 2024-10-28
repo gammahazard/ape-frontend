@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Twitter } from 'lucide-react';
-import SlidingBanner from '@/components/SlidingBanner';
-import SlotMachine from '@/components/SlotMachine';
-
+import { Twitter } from 'lucide-react';
+import { useState } from 'react';
+import HomeTab from '@/components/tabs/HomeTab';
+import WhitelistTab from '@/components/tabs/WhitelistTab';
+import AboutTab from '@/components/tabs/AboutTab';
 
 const DiscordIcon = () => (
   <svg 
@@ -19,9 +19,7 @@ const DiscordIcon = () => (
 );
 
 const Home = () => {
-  const handleMintClick = () => {
-    window.open('https://your-launchpad-url.com', '_blank');
-  };
+  const [activeTab, setActiveTab] = useState<'home' | 'whitelist' | 'about'>('home');
 
   return (
     <main className="flex flex-col min-h-screen bg-[#030303] relative">
@@ -30,8 +28,26 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4">
           <nav className="flex justify-between items-center h-16">
             <div className="text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-              LUCID APES
+              Jungle Vision
             </div>
+            
+            {/* Navigation Tabs */}
+            <div className="flex gap-8">
+              {(['home', 'whitelist', 'about'] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 text-sm font-medium transition-colors
+                    ${activeTab === tab 
+                      ? 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 border-b-2 border-purple-500' 
+                      : 'text-gray-400 hover:text-gray-200'
+                    }`}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+
             <div className="flex items-center gap-6">
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" 
                 className="hover:text-purple-400 transition-colors">
@@ -48,54 +64,9 @@ const Home = () => {
 
       {/* Content Container */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8 gap-8">
-        {/* Hero Section */}
-        <div className="text-center mb-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-            Welcome to the Future
-          </h1>
-          <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-            Join the most exclusive NFT collection in the metaverse
-          </p>
-        </div>
-
-        {/* Banner Section */}
-        <div className="w-full">
-          <SlidingBanner />
-        </div>
-<SlotMachine />
-        {/* Collection Info Section - Moved closer to banner */}
-        <div className="max-w-5xl mx-auto w-full -mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 place-items-center">
-            <div className="flex gap-12 items-center justify-center w-full">
-              <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-                  10,000
-                </p>
-                <p className="text-gray-400 text-sm mt-1">Total Supply</p>
-              </div>
-              <div className="text-center">
-                <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
-                  3 APE
-                </p>
-                <p className="text-gray-400 text-sm mt-1">Mint Price</p>
-              </div>
-            </div>
-
-            <Button 
-              onClick={handleMintClick}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-12 py-7 rounded-xl flex items-center gap-2 justify-center transform hover:scale-105 transition-all duration-300 text-lg w-full max-w-sm"
-            >
-              Mint Now
-              <ArrowUpRight className="w-6 h-6" />
-            </Button>
-
-            <div className="text-center">
-              <p className="text-sm text-gray-400">
-                Powered by Magic Eden
-              </p>
-            </div>
-          </div>
-        </div>
+        {activeTab === 'home' && <HomeTab />}
+        {activeTab === 'whitelist' && <WhitelistTab />}
+        {activeTab === 'about' && <AboutTab />}
       </div>
     </main>
   );
