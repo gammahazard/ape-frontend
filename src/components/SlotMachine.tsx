@@ -311,10 +311,12 @@ const SlotMachine = () => {
                   ? 'border-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.5)] animate-pulse' 
                   : 'border-purple-500/30'}`}
             >
-              <div
-                ref={el => reelRefs.current[reelIndex] = el}
-                className="absolute top-0 left-0 w-full"
-              >
+            <div
+  ref={(el: HTMLDivElement | null): void => {
+    reelRefs.current[reelIndex] = el;
+  }}
+  className="absolute top-0 left-0 w-full"
+>
                 {reel.symbols.map((symbol, symbolIndex) => (
                   <div
                     key={symbolIndex}
