@@ -288,7 +288,7 @@ const SlotMachine = () => {
             <div className="text-4xl font-bold text-yellow-400 animate-pulse text-center">
               🎉 FREE SPIN TRIGGERED! 🎉
               <div className="text-xl text-yellow-200 mt-4">
-                10% chance for Triple Gorilla Jackpot!
+                5% chance for Triple Gorilla Jackpot!
               </div>
               <button
                 onClick={spin}
@@ -311,12 +311,12 @@ const SlotMachine = () => {
                   ? 'border-yellow-400 shadow-[0_0_15px_rgba(255,215,0,0.5)] animate-pulse' 
                   : 'border-purple-500/30'}`}
             >
-            <div
-  ref={(el: HTMLDivElement | null): void => {
-    reelRefs.current[reelIndex] = el;
-  }}
-  className="absolute top-0 left-0 w-full"
->
+              <div
+                ref={(el: HTMLDivElement | null): void => {
+                  reelRefs.current[reelIndex] = el;
+                }}
+                className="absolute top-0 left-0 w-full"
+              >
                 {reel.symbols.map((symbol, symbolIndex) => (
                   <div
                     key={symbolIndex}
@@ -351,8 +351,8 @@ const SlotMachine = () => {
       >
         {isSpinning ? "Spinning..." : showFreeSpin ? "Free Spin Available!" : "SPIN!"}
       </button>
-
-      {showWinForm && (
+  
+      {showWinForm && finalSymbolsRef.current.every(symbol => symbol === '🦍') && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-gradient-to-b from-gray-900 to-black rounded-2xl p-8 max-w-md w-full border border-purple-500/30">
             <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent text-center">
@@ -364,15 +364,15 @@ const SlotMachine = () => {
                   Enter your wallet address to claim your prize:
                 </label>
                 <input
-  type="text"
-  value={walletAddress}
-  onChange={(e) => setWalletAddress(e.target.value)}
-  className="w-full p-3 bg-gray-900 border border-purple-500/30 rounded-xl 
-    focus:ring-2 focus:ring-purple-500 focus:border-transparent
-    text-white"
-  placeholder="0x..."
-  required
-/>
+                  type="text"
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  className="w-full p-3 bg-gray-900 border border-purple-500/30 rounded-xl 
+                    focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                    text-white"
+                  placeholder="0x..."
+                  required
+                />
               </div>
               <div className="flex gap-4">
                 <button
